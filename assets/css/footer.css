@@ -1,0 +1,14 @@
+#footer-container {
+  display: flex;
+  background-color: grey;
+  justify-content: flex-start; }
+  #footer-container ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0; }
+  #footer-container li {
+    display: inline; }
+  #footer-container li a {
+    color: white;
+    text-align: center;
+    text-decoration: none; }

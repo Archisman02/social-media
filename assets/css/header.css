@@ -1,0 +1,16 @@
+#header-container {
+  background-color: darkblue;
+  display: flex;
+  justify-content: space-between; }
+  #header-container div {
+    color: white; }
+  #header-container ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0; }
+  #header-container li {
+    display: inline; }
+  #header-container li a {
+    color: white;
+    text-align: center;
+    text-decoration: none; }
