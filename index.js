@@ -9,6 +9,7 @@ const db = require("./config/mongoose");
 const session = require("express-session");
 const passport = require("passport");
 const passportLocal = require("./config/passport-local-strategy");
+const MongoStore = require("connect-mongo");
 const sass = require("node-sass");
 const fs = require("fs");
 const path = require("path");
@@ -87,6 +88,10 @@ app.use(
     cookie: {
       maxAge: 1000 * 60 * 100, // expires after this much minutes(in milliseconds)
     },
+    store: MongoStore.create({
+      mongoUrl: "mongodb://0.0.0.0:27017/codeial_development",
+      autoRemove: "disabled",
+    }),
   })
 );
 
