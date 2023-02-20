@@ -13,6 +13,8 @@ const MongoStore = require("connect-mongo");
 const sass = require("node-sass");
 const fs = require("fs");
 const path = require("path");
+const flash = require("connect-flash");
+const customMware = require("./config/middleware");
 
 // Directory containing SCSS files
 const srcDir = "./assets/scss";
@@ -99,6 +101,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(passport.setAuthenticatedUser);
+
+// It is put after session is used because flash messages use session cookies
+app.use(flash());
+app.use(customMware.setFlash);
 
 // use express router
 app.use("/", require("./routes/index"));
