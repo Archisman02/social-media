@@ -1,7 +1,10 @@
-<li>
+<!-- In the template it does not matter if you use _id or id unless you are comparing. -->
+<li id="post-<%= post._id %>">
   <p>
     <% if(locals.user && locals.user.id == post.user.id){ %>
-    <small> <a href="/posts/destroy/<%= post.id %>">X</a> </small>
+    <small>
+      <a class="delete-post-button" href="/posts/destroy/<%= post.id %>">X</a>
+    </small>
     <% } %> <%= post.content %>
     <br />
     <small> <%= post.user.name %> </small>
