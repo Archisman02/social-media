@@ -1,6 +1,7 @@
 const User = require("../models/user");
 const fs = require("fs");
 const path = require("path");
+const Friendship = require("../models/friendship");
 
 // let's keep it same as before
 module.exports.profile = function (req, res) {
