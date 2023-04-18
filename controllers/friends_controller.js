@@ -22,4 +22,28 @@ module.exports.addFriend = async function (req, res) {
   }
 };
 
-module.exports.destroyFriend = async function (req, res) {};
+module.exports.destroyFriend = async function (req, res) {
+  try {
+    if (req.user.id != req.params.id) {
+      let friend = await Friendship.findOne({
+        from_user: req.user.id,
+        to_user: req.params.id,
+      });
+      console.log(friend);
+
+      friend.remove();
+
+      let friendRemove = await User.findOneAndUpdate(
+        { from_user: req.user.id },
+        {
+          $pull: { friendships: req.params.id },
+        }
+      );
+
+      return res.redirect("back");
+    }
+  } catch (err) {
+    console.log("error", err);
+    return res.redirect("back");
+  }
+};

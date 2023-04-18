@@ -1,4 +1,5 @@
 const express = require("express");
+const env = require("./config/environment");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const app = express();
@@ -23,12 +24,13 @@ const chatServer = require("http").Server(app);
 const chatSockets = require("./config/chat_sockets").chatSockets(chatServer);
 chatServer.listen(5000);
 console.log("chat server is listening on port 5000");
+// const path = require("path");
 
 // Directory containing SCSS files
-const srcDir = "./assets/scss";
+const srcDir = path.join(__dirname, env.asset_path, "scss");
 
 // Directory for output CSS files
-const destDir = "./assets/css";
+const destDir = path.join(__dirname, env.asset_path, "css");
 
 // Read all files in the src directory
 fs.readdir(srcDir, (err, files) => {
@@ -76,7 +78,7 @@ app.use(
 app.use(cookieParser());
 app.use(express.urlencoded());
 
-app.use(express.static("./assets"));
+app.use(express.static(env.asset_path));
 // make the uploads path available to the browser
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
@@ -94,7 +96,7 @@ app.use(
   session({
     name: "codeial",
     // TODO change the secret before deployment in production mode
-    secret: "blahsomething", // code to encode
+    secret: env.session_cookie_key, // code to encode
     saveUninitialized: false, // when user has not logged in, no need to save user's details
     resave: false, // no need to rewrite or save it again and again
     cookie: {
