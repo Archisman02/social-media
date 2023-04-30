@@ -1,5 +1,6 @@
 const express = require("express");
 const env = require("./config/environment");
+const logger = require("morgan");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const app = express();
@@ -26,47 +27,49 @@ chatServer.listen(5000);
 console.log("chat server is listening on port 5000");
 // const path = require("path");
 
-// Directory containing SCSS files
-const srcDir = path.join(__dirname, env.asset_path, "scss");
+if (env.name == "development") {
+  // Directory containing SCSS files
+  const srcDir = path.join(__dirname, env.asset_path, "scss");
 
-// Directory for output CSS files
-const destDir = path.join(__dirname, env.asset_path, "css");
+  // Directory for output CSS files
+  const destDir = path.join(__dirname, env.asset_path, "css");
 
-// Read all files in the src directory
-fs.readdir(srcDir, (err, files) => {
-  if (err) throw err;
+  // Read all files in the src directory
+  fs.readdir(srcDir, (err, files) => {
+    if (err) throw err;
 
-  // Loop through each file
-  files.forEach((file) => {
-    // Only process files with .scss extension
-    if (path.extname(file) === ".scss") {
-      // Read the SCSS file
-      fs.readFile(path.join(srcDir, file), "utf-8", (err, data) => {
-        if (err) throw err;
+    // Loop through each file
+    files.forEach((file) => {
+      // Only process files with .scss extension
+      if (path.extname(file) === ".scss") {
+        // Read the SCSS file
+        fs.readFile(path.join(srcDir, file), "utf-8", (err, data) => {
+          if (err) throw err;
 
-        // Convert SCSS to CSS
-        sass.render(
-          {
-            data: data,
-          },
-          (err, result) => {
-            if (err) throw err;
+          // Convert SCSS to CSS
+          sass.render(
+            {
+              data: data,
+            },
+            (err, result) => {
+              if (err) throw err;
 
-            // Write the CSS to a file
-            fs.writeFile(
-              path.join(destDir, path.basename(file, ".scss") + ".css"),
-              result.css,
-              (err) => {
-                if (err) throw err;
-                console.log(`Converted ${file} to CSS`);
-              }
-            );
-          }
-        );
-      });
-    }
+              // Write the CSS to a file
+              fs.writeFile(
+                path.join(destDir, path.basename(file, ".scss") + ".css"),
+                result.css,
+                (err) => {
+                  if (err) throw err;
+                  console.log(`Converted ${file} to CSS`);
+                }
+              );
+            }
+          );
+        });
+      }
+    });
   });
-});
+}
 
 app.use(
   bodyParser.urlencoded({
@@ -81,6 +84,8 @@ app.use(express.urlencoded());
 app.use(express.static(env.asset_path));
 // make the uploads path available to the browser
 app.use("/uploads", express.static(__dirname + "/uploads"));
+
+app.use(logger(env.morgan.mode, env.morgan.options));
 
 app.use(expressLayouts);
 // extract style and scripts from sub pages into the layout
